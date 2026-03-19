@@ -6,6 +6,7 @@ import { api } from '@/axios';
 import Button from '@/componentes/button';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import Cookies from 'js-cookie'
 
 export default function AuthPage() {
     const [isLogin, setIsLogin] = useState(true);
@@ -74,7 +75,7 @@ export default function AuthPage() {
                 senha: dados.senha
             });
 
-            localStorage.setItem('token', response.data.token);
+            Cookies.set('token', response.data.token, { expires: 7, secure: true })
             localStorage.setItem('nome', response.data.nome);
             localStorage.setItem('id', response.data.id);
 

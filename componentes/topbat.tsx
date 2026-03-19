@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Cookies from 'js-cookie'
 
 // 1. Tipagem fiel ao seu Banco de Dados (Tabela Membros)
 type MembroConta = {
@@ -145,6 +146,7 @@ export default function TopBar({ contaAtiva, membros, contasDisponiveis, usuario
                                         <button
                                             onClick={() => {
                                                 localStorage.clear();
+                                                Cookies.remove('token')
                                                 window.location.href = '/login';
                                             }}
                                             className="w-full text-left px-3 py-2 text-xs text-pink-500 hover:bg-pink-500/10 rounded-xl transition-all font-semibold"
