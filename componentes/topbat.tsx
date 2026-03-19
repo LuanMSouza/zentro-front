@@ -110,6 +110,7 @@ export default function TopBar({ contaAtiva, membros, contasDisponiveis, usuario
                                     className="absolute right-0 mt-3 w-72 bg-zinc-900 border border-zinc-800 rounded-3xl shadow-2xl p-3 z-50"
                                 >
                                     <p className="px-3 text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-3">Alternar Espaços</p>
+                                    <p className="px-3 text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-3">Codigo para convites : {localStorage.getItem('id')}</p>
 
                                     <div className="space-y-1 mb-4 max-h-48 overflow-y-auto pr-1">
                                         {contasDisponiveis.map(conta => (
