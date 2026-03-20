@@ -10,6 +10,6 @@
     font-family: "Roboto", sans-serif;
   }
   body {
-    @apply bg-slate-950 text-zinc-200 min-h-screen flex flex-col items-center m-0 p-0;
+    @apply cursor-default bg-slate-950 text-zinc-200 min-h-screen flex flex-col items-center m-0 p-0;
   }
 }

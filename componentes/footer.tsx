@@ -37,7 +37,9 @@ export default function Footer() {
                         </span>
                     </div>
 
-                    <div className="text-zinc-500 text-[11px] uppercase tracking-widest">
+                    <div
+                        onClick={() => window.location.href = 'https://luansouzadev.com.br'}
+                        className="text-zinc-500 cursor-pointer text-[11px] uppercase tracking-widest">
                         By <span className="text-zinc-300">Luan Souza</span>
                     </div>
                 </div>

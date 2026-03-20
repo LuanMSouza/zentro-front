@@ -47,7 +47,7 @@ export default function TopBar({ contaAtiva, membros, contasDisponiveis, usuario
             <div className="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
 
                 {/* Logo e Contexto do Espaço */}
-                <div className="flex items-center gap-6">
+                <div className="flex items-center gap-6 cursor-pointer">
                     <span onClick={() => window.location.href = '/'} className="text-zinc-100 font-bold text-xl tracking-tighter">
                         Zen<span className="text-emerald-400">tro</span>
                     </span>
@@ -93,7 +93,7 @@ export default function TopBar({ contaAtiva, membros, contasDisponiveis, usuario
                     <div className="relative">
                         <button
                             onClick={() => setIsMenuOpen(!isMenuOpen)}
-                            className="flex items-center gap-2 p-1.5 pl-3 rounded-2xl bg-zinc-900/50 border border-zinc-800 hover:border-zinc-700 transition-all"
+                            className="flex cursor-pointer   items-center gap-2 p-1.5 pl-3 rounded-2xl bg-zinc-900/50 border border-zinc-800 hover:border-zinc-700 transition-all"
                         >
                             <span className="text-zinc-300 text-xs font-semibold">{usuarioLogado.nome}</span>
                             <div className="w-7 h-7 rounded-xl bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-extrabold text-[10px]">
@@ -107,7 +107,7 @@ export default function TopBar({ contaAtiva, membros, contasDisponiveis, usuario
                                     initial={{ opacity: 0, y: 10, scale: 0.95 }}
                                     animate={{ opacity: 1, y: 0, scale: 1 }}
                                     exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                                    className="absolute right-0 mt-3 w-72 bg-zinc-900 border border-zinc-800 rounded-3xl shadow-2xl p-3 z-50"
+                                    className="absolute  right-0 mt-3 w-72 bg-zinc-900 border border-zinc-800 rounded-3xl shadow-2xl p-3 z-50"
                                 >
                                     <p className="px-3 text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-3">Alternar Espaços</p>
                                     <p className="px-3 text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-3">Codigo para convites : {localStorage.getItem('id')}</p>
@@ -120,7 +120,7 @@ export default function TopBar({ contaAtiva, membros, contasDisponiveis, usuario
                                                     localStorage.setItem('contaAtivaId', String(conta.id));
                                                     window.location.reload();
                                                 }}
-                                                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl transition-all ${conta.id === contaAtiva?.id
+                                                className={`w-full cursor-pointer flex items-center justify-between px-3 py-2.5 rounded-xl transition-all ${conta.id === contaAtiva?.id
                                                     ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
                                                     : 'text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200'
                                                     }`}
@@ -136,12 +136,12 @@ export default function TopBar({ contaAtiva, membros, contasDisponiveis, usuario
                                             abrirCriarConta(true)
                                             setIsMenuOpen(false)
                                         }}
-                                        className="w-full text-left mb-2 px-3 py-2 text-xs text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 rounded-xl transition-all">
+                                        className="w-full cursor-pointer text-left mb-2 px-3 py-2 text-xs text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 rounded-xl transition-all">
                                         + Criar Conta
                                     </button>
 
                                     <div className="border-t border-zinc-800 pt-3 space-y-1">
-                                        <button onClick={() => window.location.href = '/configuracao'} className="w-full text-left px-3 py-2 text-xs text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 rounded-xl transition-all">
+                                        <button onClick={() => window.location.href = '/configuracao'} className="w-full cursor-pointer text-left px-3 py-2 text-xs text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 rounded-xl transition-all">
                                             Configurações
                                         </button>
                                         <button
@@ -150,7 +150,7 @@ export default function TopBar({ contaAtiva, membros, contasDisponiveis, usuario
                                                 Cookies.remove('token')
                                                 window.location.href = '/login';
                                             }}
-                                            className="w-full text-left px-3 py-2 text-xs text-pink-500 hover:bg-pink-500/10 rounded-xl transition-all font-semibold"
+                                            className="w-full cursor-pointer text-left px-3 py-2 text-xs text-pink-500 hover:bg-pink-500/10 rounded-xl transition-all font-semibold"
                                         >
                                             Sair do Zentro
                                         </button>
