@@ -76,7 +76,7 @@ export default function Tabela({ transacoes }: TabelaProps) {
                             className="group hover:bg-zinc-800/30 transition-colors"
                         >
                             {/* Coluna Principal: No Mobile ela mostra tudo */}
-                            <td className="py-4 px-2 max-w-[150px] md:max-w-none">
+                            <td className="py-4 px-2 max-w-37.5 md:max-w-none">
                                 <p className="text-zinc-100 text-sm md:text-base font-medium truncate group-hover:text-white transition-colors">
                                     {item.descricao}
                                 </p>

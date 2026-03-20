@@ -6,6 +6,7 @@ type ContasType = {
     criado_por: number,
     criado_em: Date,
     ativo: boolean,
+    papel: string,
     role: '' | 'editor' | 'admin'
 }
 
@@ -15,6 +16,7 @@ type ContasProps = {
 }
 
 export default function VariasContas({ listaContas, selecionar }: ContasProps) {
+
     return (
         <>
             <Container>
@@ -32,7 +34,7 @@ export default function VariasContas({ listaContas, selecionar }: ContasProps) {
                                 className="p-6 bg-zinc-900 border border-zinc-800 rounded-xl cursor-pointer hover:border-emerald-500 transition-all"
                             >
                                 <h3 className="text-lg font-medium">{conta.nome}</h3>
-                                <p className="text-zinc-500 text-sm">{conta.criado_por == Number(localStorage.getItem('id')) ? 'Proprietário' : 'Convidado'}</p>
+                                <p className="text-zinc-500 text-sm"> {conta.papel == 'adm' ? 'Proprietário' : 'Convidado'}</p>
                             </div>
                         ))}
                     </div>

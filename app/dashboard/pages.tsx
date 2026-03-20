@@ -19,6 +19,7 @@ type ContasBody = {
     criado_por: number;
     criado_em: Date;
     ativo: boolean;
+    papel: string;
     role: 'editor' | 'admin' | '';
 }
 
@@ -169,7 +170,10 @@ export default function DashBoard() {
                     usuarioLogado={usuarioLogado} abrirCriarConta={setCriarConta}
                     selecionarConta={() => { }}
                 />
-                <WelcomeState />
+                <WelcomeState
+                    criarConta={() => setCriarConta(true)} />
+
+
                 {convites.length > 0 && (
                     <CardConvite
                         convite={convites[0]}
@@ -177,14 +181,25 @@ export default function DashBoard() {
                     />
                 )}
 
-                {criarConta && <NovaConta onClose={() => setCriarConta(false)} atualizarContas={(d) => setListaContas(prev => [...prev, d.conta])} />}
+                {criarConta &&
+                    <NovaConta onClose={() => setCriarConta(false)}
+                        atualizarContas={(d) => setListaContas(prev => [...prev, d.conta])} />}
             </>
         );
     }
 
     // Se houver várias contas e nenhuma selecionada ainda (e não estiver no Dashboard principal)
     if (listaContas.length > 1 && !idSelecionado) {
-        return <VariasContas listaContas={listaContas} selecionar={mudarConta} />;
+        return (
+            <>
+                <TopBar
+                    contaAtiva={null as any} membros={[]} contasDisponiveis={[]}
+                    usuarioLogado={usuarioLogado} abrirCriarConta={setCriarConta}
+                    selecionarConta={() => { }}
+                />
+                <VariasContas listaContas={listaContas} selecionar={mudarConta} />
+            </>
+        )
     }
 
     return (
