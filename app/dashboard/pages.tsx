@@ -37,6 +37,10 @@ export default function DashBoard() {
 
     const [usuarioLogado, setUsuarioLogado] = useState<any>(null);
 
+    const hoje = new Date();
+    const [mes, setMes] = useState(hoje.getMonth() + 1);
+    const [ano, setAno] = useState(hoje.getFullYear());
+
     // convites
     const [convites, setConvites] = useState<any[]>([]);
 
@@ -113,8 +117,9 @@ export default function DashBoard() {
 
     async function pegarDadosDaConta() {
         if (!contaAtiva?.id) return;
+
         try {
-            const resposta = await api.get(`/contas/${contaAtiva.id}`);
+            const resposta = await api.get(`/contas/${contaAtiva.id}/${mes}/${ano}`);
             setTransacoes(resposta.data.transacoes || []);
             setUsuariosNaConta(resposta.data.usuarios || []);
         } catch (error) {
@@ -122,10 +127,11 @@ export default function DashBoard() {
         }
     }
 
-    // 5. Busca dados sempre que a conta ativa mudar
     useEffect(() => {
-        if (contaAtiva?.id) pegarDadosDaConta();
-    }, [contaAtiva?.id]);
+        if (contaAtiva?.id && mes !== 0 && ano !== 0) {
+            pegarDadosDaConta();
+        }
+    }, [contaAtiva?.id, mes, ano]);
 
     // 6. Cálculos de Saldo e Gráfico (Memoizados)
     const { receitas, despesas } = useMemo(() => {
@@ -221,6 +227,10 @@ export default function DashBoard() {
                     transacoes={transacoes}
                     dadosGraficoPizza={dadosGraficoPizza}
                     modalCompartilhar={() => setCompartilharConta(true)}
+                    mes={mes}
+                    ano={ano}
+                    mudarMes={(e) => setMes(e)}
+                    mudarAno={(e) => setAno(e)}
                 />
             </Container>
 

@@ -13,3 +13,45 @@
     @apply cursor-default bg-slate-950 text-zinc-200 min-h-screen flex flex-col items-center m-0 p-0;
   }
 }
+
+
+/* No seu globals.css */
+
+
+/* Remove os estilos padrão do navegador para os elementos select */
+
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+
+/* Força a cor de fundo e do texto no hover e focus */
+
+
+/* O segredo está em re-aplicar o background color explicitamente */
+
+select:hover, select:focus {
+  background-color: transparent !important;
+  /* Mantenha transparente para usar o background do container-pill */
+  color: #34d399 !important;
+  /* emerald-400 no hover */
+  outline: none;
+  /* Remove a borda azul de foco padrão */
+}
+
+
+/* Corrige especificamente o comportamento bizarro de background no hover no Windows/Chrome */
+
+select::-ms-expand {
+  display: none;
+  /* Esconde a seta padrão no IE/Edge antigo */
+}
+
+select:hover option, select:focus option {
+  background-color: #18181b !important;
+  /* zinc-900 para garantir que o dropdown não fique branco */
+  color: #d4d4d8 !important;
+  /* zinc-300 para o texto das opções */
+}
