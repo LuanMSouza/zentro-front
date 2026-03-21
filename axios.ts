@@ -13,7 +13,6 @@ api.interceptors.request.use((config) => {
 
     if (token) {
         const cleanToken = token.trim().replace(/^"|"$/g, '');
-
         config.headers.Authorization = `Bearer ${cleanToken}`;
     }
 
@@ -21,3 +20,23 @@ api.interceptors.request.use((config) => {
 }, (error) => {
     return Promise.reject(error);
 });
+
+api.interceptors.response.use(
+    (response) => {
+        return response;
+    },
+    (error) => {
+        if (error.response && error.response.status === 401) {
+
+            Cookies.remove('token');
+
+            if (typeof window !== 'undefined') {
+                localStorage.clear();
+
+                window.location.href = '/login';
+            }
+        }
+
+        return Promise.reject(error);
+    }
+);

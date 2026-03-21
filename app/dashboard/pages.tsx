@@ -12,6 +12,7 @@ import NovaConta from '@/modais/criarConta'
 import Swal from 'sweetalert2'
 import CardConvite from '@/componentes/CardConvite'
 import CompartilharConta from '@/modais/compartilharConta'
+import { useRouter } from 'next/navigation' // Importe o router
 
 type ContasBody = {
     id: number;
@@ -36,6 +37,8 @@ export default function DashBoard() {
 
 
     const [usuarioLogado, setUsuarioLogado] = useState<any>(null);
+
+    const router = useRouter()
 
     const hoje = new Date();
     const [mes, setMes] = useState(hoje.getMonth() + 1);
@@ -97,7 +100,6 @@ export default function DashBoard() {
         return listaContas.find(c => c.id === idSelecionado) || listaContas[0];
     }, [listaContas, idSelecionado]);
 
-    // 4. Função para trocar de conta
     const mudarConta = (id: number) => {
         localStorage.setItem('contaAtivaId', String(id));
         setIdSelecionado(id);
@@ -108,8 +110,12 @@ export default function DashBoard() {
             const response = await api.get('/contas');
             const dados = response.data.contas || response.data;
             setListaContas(dados);
-        } catch (error) {
+        } catch (error: any) {
             console.error("Erro ao buscar contas:", error);
+            if (error.response?.status === 401) {
+                localStorage.clear(); // Limpa dados sujos
+                router.push('/login'); // Manda para o login
+            }
         } finally {
             setCarregando(false);
         }
@@ -133,7 +139,6 @@ export default function DashBoard() {
         }
     }, [contaAtiva?.id, mes, ano]);
 
-    // 6. Cálculos de Saldo e Gráfico (Memoizados)
     const { receitas, despesas } = useMemo(() => {
         return transacoes.reduce((acc, t) => {
             const v = Number(t.valor);
@@ -162,12 +167,10 @@ export default function DashBoard() {
         }));
     }, [transacoes]);
 
-    // 7. Verificação de Carregamento
     if (carregando || !usuarioLogado) {
         return <Container><p className="py-20 text-center text-zinc-500">Carregando Zentro...</p></Container>;
     }
 
-    // 8. Logica de Telas (Early Returns)
     if (listaContas.length === 0) {
         return (
             <>
@@ -194,7 +197,6 @@ export default function DashBoard() {
         );
     }
 
-    // Se houver várias contas e nenhuma selecionada ainda (e não estiver no Dashboard principal)
     if (listaContas.length > 1 && !idSelecionado) {
         return (
             <>
