@@ -9,6 +9,43 @@ import Swal from 'sweetalert2'
 import { User, LayoutGrid, Trash2 } from 'lucide-react'
 
 export default function Configuracoes() {
+    // 
+    const trackAccess = () => {
+        // 1. Coleta os dados
+        const params = new URLSearchParams(window.location.search);
+
+        const payload = JSON.stringify({
+            projeto_nome: 'portfolio',
+            pagina_path: window.location.pathname,
+            url_completa: window.location.href,
+            referrer: document.referrer || 'direto',
+            utm_source: params.get('utm_source') || null,
+            utm_medium: params.get('utm_medium') || null,
+            largura_tela: window.innerWidth,
+            idioma: navigator.language,
+            user_agent: navigator.userAgent,
+        });
+
+        const url = "https://api.analitcs.dvls.com.br/api/track";
+
+        if (navigator.sendBeacon) {
+            const blob = new Blob([payload], { type: 'application/json' });
+            navigator.sendBeacon(url, blob);
+        } else {
+            fetch(url, {
+                method: 'POST',
+                body: payload,
+                headers: { 'Content-Type': 'application/json' },
+                keepalive: true // Garante que a requisição termine mesmo se sair da página
+            }).catch(() => { }); // Falha silenciosa
+        }
+    };
+
+    if (typeof window !== 'undefined') {
+        trackAccess();
+    }
+
+    // 
     const [abaAtiva, setAbaAtiva] = useState<'perfil' | 'espaco'>('perfil')
     const [usuarioLogado, setUsuarioLogado] = useState<any>(null)
     const [loading, setLoading] = useState(false)
@@ -109,10 +146,10 @@ export default function Configuracoes() {
         if (result.isConfirmed) {
             try {
                 await api.delete(`/configuracoes/espaco/${contaAtiva.id}/membros/${membroId}`);
-                
+
                 // Mudança dinâmica: Remove da lista local imediatamente usando id ou usuario_id
                 setUsuariosNaConta(prev => prev.filter(u => (u.id || u.usuario_id) !== membroId));
-                
+
                 Swal.fire({ title: 'Removido!', icon: 'success', background: '#18181b', color: '#fff' });
             } catch (e) {
                 Swal.fire('Erro', 'Apenas administradores podem remover membros.', 'error');
