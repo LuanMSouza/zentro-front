@@ -1,6 +1,6 @@
 'use client'
 
-import DashBoard from '@/app/dashboard/pages'
+import DashBoard from '@/app/dashboard/page'
 import { useEffect } from 'react';
 
 export default function Home() {

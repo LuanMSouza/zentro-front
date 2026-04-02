@@ -1,4 +1,3 @@
-import { useState } from "react";
 import Button from "./button";
 import Card from "./card";
 import Graficos from "./graficos";
@@ -14,7 +13,8 @@ type contasBody = {
     mes: number, // Valor que vem do pai
     ano: number, // Valor que vem do pai
     mudarMes: (e: number) => void,
-    mudarAno: (e: number) => void
+    mudarAno: (e: number) => void,
+    alterarTransacoes: (transacoes: Transacao[]) => void;
 }
 
 interface Transacao {
@@ -43,6 +43,7 @@ export default function Contas({
     ano, // Use a prop em vez do estado local
     mudarMes,
     mudarAno,
+    alterarTransacoes
 }: contasBody) {
 
     const meses = [
@@ -126,7 +127,9 @@ export default function Contas({
                         {meses.find(m => m.v === mes)?.n} {ano}
                     </span>
                 </div>
-                <Tabela transacoes={transacoes} />
+                <Tabela
+                    alterarTransacoes={alterarTransacoes}
+                    transacoes={transacoes} />
             </div>
 
             <Graficos data={dadosGraficoPizza} />

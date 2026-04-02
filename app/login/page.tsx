@@ -75,11 +75,21 @@ export default function AuthPage() {
                 senha: dados.senha
             });
 
-            Cookies.set('token', response.data.token, { expires: 7, secure: true })
-            localStorage.setItem('nome', response.data.nome);
-            localStorage.setItem('id', response.data.id);
+            if (response.data.token) {
 
-            router.push('/');
+                Cookies.set('token',
+                    response.data.token,
+                    {
+                        expires: 7,
+                        secure: true,
+                        path: '/'
+                    })
+
+                localStorage.setItem('nome', response.data.nome);
+                localStorage.setItem('id', response.data.id);
+
+                window.location.href = '/';
+            }
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 const msg = error.response?.data?.error || 'Algo deu errado com o login';

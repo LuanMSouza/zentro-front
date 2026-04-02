@@ -233,6 +233,7 @@ export default function DashBoard() {
                     ano={ano}
                     mudarMes={(e) => setMes(e)}
                     mudarAno={(e) => setAno(e)}
+                    alterarTransacoes={setTransacoes}
                 />
             </Container>
 
