@@ -29,6 +29,7 @@ export default function DashBoard() {
     const [idSelecionado, setIdSelecionado] = useState<number | null>(null); // Estado para a troca de conta
     const [transacoes, setTransacoes] = useState<any[]>([]);
     const [usuariosNaConta, setUsuariosNaConta] = useState<any[]>([]);
+    const [saldoAnterior, setSaldoAnterior] = useState(0);
     const [carregando, setCarregando] = useState(true);
 
     const [novaTransacao, setNovaTransacao] = useState(false);
@@ -128,6 +129,7 @@ export default function DashBoard() {
             const resposta = await api.get(`/contas/${contaAtiva.id}/${mes}/${ano}`);
             setTransacoes(resposta.data.transacoes || []);
             setUsuariosNaConta(resposta.data.usuarios || []);
+            setSaldoAnterior(Number(resposta.data.saldoAnterior) || 0);
         } catch (error) {
             console.error("Erro ao buscar dados da conta:", error);
         }
@@ -148,6 +150,8 @@ export default function DashBoard() {
         }, { receitas: 0, despesas: 0 });
     }, [transacoes]);
 
+    const saldoTotal = saldoAnterior + receitas - despesas;
+
     const dadosGraficoPizza = useMemo(() => {
         const categoriasMap = transacoes
             .filter(t => t.tipo === 'despesa')
@@ -157,7 +161,16 @@ export default function DashBoard() {
             }, {} as Record<string, number>);
 
         const cores: Record<string, string> = {
-            'lazer': '#f472b6', 'alimentação': '#34d399', 'saúde': '#60a5fa', 'trabalho': '#8b5cf6'
+            'alimentação': '#34d399',
+            'moradia': '#fbbf24',
+            'transporte': '#60a5fa',
+            'saúde': '#22d3ee',
+            'educação': '#818cf8',
+            'lazer': '#f472b6',
+            'assinaturas': '#a78bfa',
+            'compras': '#fb923c',
+            'pets': '#4ade80',
+            'outros': '#71717a',
         };
 
         return Object.keys(categoriasMap).map(cat => ({
@@ -226,6 +239,8 @@ export default function DashBoard() {
                     modalTransacao={setNovaTransacao}
                     receitas={receitas}
                     despesas={despesas}
+                    saldoAnterior={saldoAnterior}
+                    saldoTotal={saldoTotal}
                     transacoes={transacoes}
                     dadosGraficoPizza={dadosGraficoPizza}
                     modalCompartilhar={() => setCompartilharConta(true)}

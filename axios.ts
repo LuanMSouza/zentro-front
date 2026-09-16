@@ -42,7 +42,12 @@ api.interceptors.response.use(
         return response;
     },
     (error) => {
-        if (error.response && error.response.status === 401) {
+        // Não força logout quando o próprio 401 veio de uma tentativa de login
+        // (senha/usuário errados) — nesse caso só queremos mostrar o erro,
+        // não redirecionar de volta pra /login no meio do formulário.
+        const isLoginRequest = error.config?.url?.includes('/auth/login');
+
+        if (error.response && error.response.status === 401 && !isLoginRequest) {
 
             Cookies.remove('token');
 

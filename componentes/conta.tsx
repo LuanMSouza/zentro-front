@@ -8,6 +8,8 @@ type contasBody = {
     modalCompartilhar: (e: boolean) => void,
     receitas: number,
     despesas: number,
+    saldoAnterior: number,
+    saldoTotal: number,
     transacoes: Transacao[],
     dadosGraficoPizza: GraficoItem[],
     mes: number, // Valor que vem do pai
@@ -36,6 +38,8 @@ export default function Contas({
     modalTransacao,
     receitas,
     despesas,
+    saldoAnterior,
+    saldoTotal,
     transacoes,
     dadosGraficoPizza,
     modalCompartilhar,
@@ -117,7 +121,11 @@ export default function Contas({
             <div className="flex flex-wrap gap-6 w-full justify-between mb-12">
                 <Card titulo="Entradas" dado={receitas} />
                 <Card titulo="Saídas" dado={despesas * -1} />
-                <Card titulo="Saldo Total" dado={receitas - despesas} />
+                <Card
+                    titulo="Saldo Total"
+                    dado={saldoTotal}
+                    subtitulo={`Saldo anterior: ${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(saldoAnterior)}`}
+                />
             </div>
 
             <div className="mt-8">

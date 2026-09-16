@@ -93,7 +93,7 @@ export default function Configuracoes() {
     async function pegarDadosDaConta() {
         if (!contaAtiva?.id) return
         try {
-            const resposta = await api.get(`/contas/${contaAtiva.id}`)
+            const resposta = await api.get(`/contas/${contaAtiva.id}/membros`)
             setUsuariosNaConta(resposta.data.usuarios || [])
         } catch (error) {
             console.error("Erro ao buscar dados da conta:", error)

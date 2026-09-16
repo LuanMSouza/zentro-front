@@ -4,6 +4,7 @@ import { api } from '@/axios';
 import { motion, Variants } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
+import { categoriasPorTipo } from '@/lib/categorias';
 
 interface Transacao {
     id: number;
@@ -48,24 +49,24 @@ export default function Tabela({ transacoes, alterarTransacoes }: TabelaProps) {
     }
 
     function formatarData(isoString: string) {
-        const date = new Date(isoString);
-        return date.toLocaleDateString('pt-BR', {
-            timeZone: 'America/Sao_Paulo',
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric'
-        });
+        // data_transacao é uma coluna DATE (sem hora/fuso) no banco. O Postgres/pg
+        // devolve algo como "2026-08-20T00:00:00.000Z"; converter isso pra um fuso
+        // específico (ex: America/Sao_Paulo, UTC-3) joga a data um dia pra trás.
+        // Como não há componente de hora real, extraímos ano/mês/dia direto da string.
+        const [ano, mes, dia] = isoString.split('T')[0].split('-');
+        return `${dia}/${mes}/${ano}`;
     }
-    const CATEGORIAS = [
-        "Alimentação", "Lazer", "Saúde", "Transporte",
-        "Educação", "Trabalho", "Moradia", "Outros"
-    ];
+    function gerarOptionsCategoria(tipo: 'receita' | 'despesa', categoriaAtual?: string) {
+        // Categoria é salva em minúsculo (ver novaTransacao.tsx / lib/categorias.ts) —
+        // manter o mesmo padrão aqui, senão a edição grava "Alimentação" enquanto a
+        // criação grava "alimentação", duplicando a categoria no gráfico de pizza.
+        return categoriasPorTipo(tipo).map(cat =>
+            `<option value="${cat.toLowerCase()}" ${categoriaAtual === cat.toLowerCase() ? 'selected' : ''}>${cat}</option>`
+        ).join('');
+    }
 
     function editar(id: number, transacao: Transacao) {
-        // Gerar as opções do select dinamicamente
-        const optionsCategorias = CATEGORIAS.map(cat =>
-            `<option value="${cat}" ${transacao.categoria === cat ? 'selected' : ''}>${cat}</option>`
-        ).join('');
+        const optionsCategorias = gerarOptionsCategoria(transacao.tipo, transacao.categoria);
 
         Swal.fire({
             title: 'Editar Transação',
@@ -106,6 +107,20 @@ export default function Tabela({ transacoes, alterarTransacoes }: TabelaProps) {
             confirmButtonColor: '#10b981',
             background: '#000', // Fundo preto para combinar com sua tabela
             color: '#fff',
+            didOpen: () => {
+                const tipoSelect = document.getElementById('swal-tipo') as HTMLSelectElement;
+                const categoriaSelect = document.getElementById('swal-categoria') as HTMLSelectElement;
+
+                tipoSelect.addEventListener('change', () => {
+                    const novoTipo = tipoSelect.value as 'receita' | 'despesa';
+                    // Ao trocar o tipo, tenta manter a mesma categoria selecionada
+                    // se ela existir na lista do novo tipo; senão, limpa a seleção.
+                    const categoriaAtual = categoriaSelect.value;
+                    const novasCategorias = categoriasPorTipo(novoTipo);
+                    const mantemCategoria = novasCategorias.some(c => c.toLowerCase() === categoriaAtual);
+                    categoriaSelect.innerHTML = gerarOptionsCategoria(novoTipo, mantemCategoria ? categoriaAtual : undefined);
+                });
+            },
             preConfirm: () => {
                 const descricao = (document.getElementById('swal-descricao') as HTMLInputElement).value;
                 const valor = parseFloat((document.getElementById('swal-valor') as HTMLInputElement).value);

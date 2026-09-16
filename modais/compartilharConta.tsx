@@ -84,8 +84,10 @@ export default function CompartilharConta({ contaId, onClose }: Props) {
                             <label className="block text-xs font-bold uppercase tracking-widest text-zinc-500 mb-2">Nível de Acesso</label>
                             <select
                                 name="papel"
+                                defaultValue="editor"
                                 className="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-zinc-100 focus:border-emerald-500 outline-none transition-all appearance-none"
                             >
+                                <option value="leitura">Leitura (Só visualiza)</option>
                                 <option value="editor">Editor (Adiciona transações)</option>
                                 <option value="adm">Administrador (Total)</option>
                             </select>

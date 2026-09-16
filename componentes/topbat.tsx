@@ -10,7 +10,7 @@ type MembroConta = {
     conta_id: number;
     nome: string;
     iniciais: string;
-    papel: 'editor' | 'adm' | '';
+    papel: 'editor' | 'adm' | 'leitura' | '';
     data_adesao: Date;
 };
 
@@ -39,7 +39,9 @@ export default function TopBar({ contaAtiva, membros, contasDisponiveis, usuario
     // 3. Descobre o papel do usuário logado neste espaço específico
     const meuPapelNestaConta = useMemo(() => {
         const registro = membros.find(m => m.usuario_id === usuarioLogado.id);
-        return registro?.papel === 'adm' ? 'admin' : 'editor';
+        if (registro?.papel === 'adm') return 'admin';
+        if (registro?.papel === 'leitura') return 'leitura';
+        return 'editor';
     }, [membros, usuarioLogado.id]);
 
     return (

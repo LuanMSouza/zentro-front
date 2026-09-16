@@ -3,9 +3,10 @@ import Contador from "./contador";
 type CardProps = {
     titulo: string,
     dado: number,
+    subtitulo?: string,
 }
 
-export default function Card({ titulo, dado }: CardProps) {
+export default function Card({ titulo, dado, subtitulo }: CardProps) {
     const isNegative = dado < 0;
 
     // Cores modernas: Verde Esmeralda e Rosa Choque suave
@@ -40,6 +41,11 @@ export default function Card({ titulo, dado }: CardProps) {
             <p className={`text-2xl font-semibold ${textColor}`}>
                 <Contador valor={dado} />
             </p>
+            {subtitulo && (
+                <p className="text-zinc-600 text-[11px] mt-1">
+                    {subtitulo}
+                </p>
+            )}
         </div>
     )
 }

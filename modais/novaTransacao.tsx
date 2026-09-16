@@ -2,9 +2,10 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import Button from '@/componentes/button';
-import React from 'react';
+import React, { useState } from 'react';
 import { api } from '@/axios';
 import Swal from 'sweetalert2';
+import { categoriasPorTipo } from '@/lib/categorias';
 
 type ModalProps = {
     onClose: () => void;
@@ -12,7 +13,19 @@ type ModalProps = {
     atualizar: ([]: any) => void
 }
 
+function dataLocalDeHoje() {
+    // Usa o fuso local do navegador (não UTC) pra não cair no dia seguinte
+    // em transações lançadas à noite no Brasil.
+    const hoje = new Date();
+    const ano = hoje.getFullYear();
+    const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+    const dia = String(hoje.getDate()).padStart(2, '0');
+    return `${ano}-${mes}-${dia}`;
+}
+
 export default function NovaTransacao({ onClose, contaId, atualizar }: ModalProps) {
+    const [tipo, setTipo] = useState<'despesa' | 'receita'>('despesa');
+    const categorias = categoriasPorTipo(tipo);
 
     async function enviarTransacao(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -26,7 +39,7 @@ export default function NovaTransacao({ onClose, contaId, atualizar }: ModalProp
             valor: dados.valor,
             tipo: dados.tipo,
             categoria: dados.categoria,
-            data_transacao: new Date()
+            data_transacao: dados.data_transacao || dataLocalDeHoje()
 
         }
 
@@ -45,11 +58,6 @@ export default function NovaTransacao({ onClose, contaId, atualizar }: ModalProp
         }
 
     }
-
-    const CATEGORIAS = [
-        "Alimentação", "Lazer", "Saúde", "Transporte",
-        "Educação", "Trabalho", "Moradia", "Outros"
-    ];
 
     return (
         <AnimatePresence>
@@ -98,24 +106,42 @@ export default function NovaTransacao({ onClose, contaId, atualizar }: ModalProp
                             </div>
                             <div>
                                 <label className="block text-xs font-bold uppercase tracking-widest text-zinc-500 mb-2">Tipo</label>
-                                <select name='tipo' className="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-zinc-400 focus:border-emerald-500 outline-none transition-colors">
+                                <select
+                                    name='tipo'
+                                    value={tipo}
+                                    onChange={(e) => setTipo(e.target.value as 'despesa' | 'receita')}
+                                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-zinc-400 focus:border-emerald-500 outline-none transition-colors"
+                                >
                                     <option value="despesa">Despesa</option>
                                     <option value="receita">Receita</option>
                                 </select>
                             </div>
                         </div>
 
+                        {/* Data */}
+                        <div>
+                            <label className="block text-xs font-bold uppercase tracking-widest text-zinc-500 mb-2">Data</label>
+                            <input
+                                type="date"
+                                name='data_transacao'
+                                defaultValue={dataLocalDeHoje()}
+                                required
+                                className="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-zinc-100 focus:border-emerald-500 outline-none transition-colors"
+                            />
+                        </div>
+
                         {/* Categoria */}
                         <div>
                             <label className="block text-xs font-bold uppercase tracking-widest text-zinc-500 mb-2">Categoria</label>
                             <select
+                                key={tipo}
                                 defaultValue=""
                                 required
                                 name='categoria'
                                 className="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-zinc-400 focus:border-emerald-500 outline-none transition-colors appearance-none cursor-pointer hover:border-zinc-700"
                             >
                                 <option value="" disabled>Selecione uma categoria...</option>
-                                {CATEGORIAS.map((cat) => (
+                                {categorias.map((cat) => (
                                     <option key={cat} value={cat.toLowerCase()}>
                                         {cat}
                                     </option>
